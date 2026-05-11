@@ -1,0 +1,10 @@
+streamlit>=1.39.0
+openai>=1.99.0
+python-dotenv>=1.0.1
+pandas>=3.0.2
+
+
+
+# 버전 보고 싶으면 'pip show <프로그램>'
+# 설치 : pip install streamlit openai pandas python-dotenv pillow
+# 자동으로 기록 : pip freeze > requirements.txt
