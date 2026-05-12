@@ -8,8 +8,9 @@
 
 - **이미지 분석**: 카메라 촬영 또는 파일 업로드로 물건 이름과 가격을 자동 추출 (GPT-4.1-mini Vision)
 - **쇼핑 목록 관리**: 항목별 수량·가격 수정, 체크박스 선택, 선택 삭제, 합계 자동 계산
-- **온라인 가격 비교**: 쿠팡 / 네이버쇼핑 / 일반 쇼핑몰 검색 링크 및 AI 가이드 제공 (스트리밍)
+- **온라인 가격 비교**: 쿠팡 / 네이버쇼핑 / 일반 쇼핑몰 검색 링크 및 AI 가이드 제공 (LangChain 스트리밍)
 - **입력값 안전 검사**: OpenAI Moderation API로 부적절한 입력 필터링
+- **학습 노트 저장**: 생성된 노트를 `notes/` 폴더에 JSON으로 자동 저장 및 불러오기
 
 ---
 
@@ -18,11 +19,13 @@
 ```
 shopping_list_app/
 ├── shopping_app.py      # Streamlit 메인 UI
-├── openai_service.py    # OpenAI API 호출 (이미지 분석, 가격 비교, 모더레이션)
+├── openai_service.py    # OpenAI + LangChain API 호출 (이미지 분석, 가격 비교, 모더레이션)
 ├── config.py            # 환경변수 로드 및 경로 설정
 ├── note_service.py      # 노트 데이터 가공 유틸리티
 ├── storage_service.py   # JSON 파일 저장/로드
 ├── requirements.txt     # 의존성 패키지 목록
+├── notes/               # 학습 노트 저장 폴더 (자동 생성)
+├── audio_outputs/       # TTS 오디오 출력 폴더 (자동 생성)
 └── .env                 # API Key 설정 (git 제외)
 ```
 
@@ -36,15 +39,30 @@ shopping_list_app/
 pip install -r requirements.txt
 ```
 
+또는 직접 설치:
+
+```bash
+pip install streamlit openai pandas python-dotenv langchain-openai langchain-core
+```
+
 ### 2. 환경변수 설정
 
 프로젝트 루트에 `.env` 파일을 생성하고 아래 내용을 입력하세요.
 
 ```
 OPENAI_API_KEY=your_openai_api_key_here
+
+# 기본 모델 설정
 DEFAULT_MODEL=gpt-4.1-mini
 MODERATION_MODEL=omni-moderation-latest
+
+# STT / TTS 설정 (선택)
+STT_MODEL=gpt-4o-mini-transcribe
+TTS_MODEL=gpt-4o-mini-tts
+TTS_VOICE=alloy
 ```
+
+> `STT_MODEL`, `TTS_MODEL`, `TTS_VOICE`는 현재 예약된 설정값입니다. 값을 지정하지 않으면 위 기본값이 사용됩니다.
 
 ### 3. 앱 실행
 
@@ -60,9 +78,11 @@ streamlit run shopping_app.py
 |------|------|
 | Frontend | [Streamlit](https://streamlit.io/) |
 | AI | OpenAI GPT-4.1-mini (Vision, Chat, Streaming) |
+| AI 체인 | LangChain (`langchain-openai`, `langchain-core`) |
 | 안전 검사 | OpenAI Moderation API |
 | 데이터 처리 | Pandas |
 | 환경 관리 | python-dotenv |
+| 노트 저장 | JSON 파일 (`notes/` 폴더) |
 
 ---
 
@@ -71,7 +91,7 @@ streamlit run shopping_app.py
 1. **사진 찍기** — 카메라 또는 파일 업로드로 물건 이미지 입력
 2. **AI 분석** — 물건 이름과 가격 자동 추출, 수정 가능
 3. **목록 추가** — 수량과 함께 쇼핑 목록에 등록
-4. **가격 비교** — 원하는 항목 체크 후 온라인 최저가 검색 링크 확인
+4. **가격 비교** — 원하는 항목 체크 후 온라인 최저가 검색 링크 확인 (LangChain 스트리밍)
 
 ---
 

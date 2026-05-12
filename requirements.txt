@@ -2,9 +2,11 @@ streamlit>=1.39.0
 openai>=1.99.0
 python-dotenv>=1.0.1
 pandas>=3.0.2
+langchain-openai>=0.3.0
+langchain-core>=0.3.0
 
 
 
 # 버전 보고 싶으면 'pip show <프로그램>'
-# 설치 : pip install streamlit openai pandas python-dotenv pillow langchain-community langchain-openai
+# 설치 : pip install streamlit openai pandas python-dotenv langchain-openai langchain-core
 # 자동으로 기록 : pip freeze > requirements.txt
