@@ -1,143 +1,77 @@
-# Shopping Price Comparator (이미지 기반 쇼핑 가격 비교)
+# AI Shopping Assistant
 
-> Capture a photo of any item or receipt → AI extracts the product name and price → compare instantly with Coupang, Naver Shopping, or Google.
-> 물건이나 영수증 사진을 찍으면 AI가 품목명·가격을 추출하고, 온라인몰 최저가를 바로 비교해 주는 Streamlit 앱입니다.
+<div align="center">
 
----
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat-square&logo=openai&logoColor=white)
+![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=flat-square&logo=langchain&logoColor=white)
 
-## 🛠️ Tech Stack (기술 스택)
+Upload a product photo → AI identifies the item → instantly find where to buy it.
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.39%2B-FF4B4B?logo=streamlit)
-![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4.1--mini-412991?logo=openai)
-![LangChain](https://img.shields.io/badge/LangChain-0.3%2B-1C3C3C?logo=langchain)
-![pandas](https://img.shields.io/badge/pandas-3.0%2B-150458?logo=pandas)
-
-| Layer | Technology |
-|---|---|
-| UI | Streamlit |
-| Image Analysis | OpenAI Vision (`gpt-4.1-mini`) |
-| Price Comparison LLM | LangChain + `ChatOpenAI` (streaming) |
-| Content Moderation | OpenAI Moderation (`omni-moderation-latest`) |
-| STT | `gpt-4o-mini-transcribe` |
-| TTS | `gpt-4o-mini-tts` |
-| Note Storage | Local JSON files |
+</div>
 
 ---
 
-## ✨ Features (주요 기능)
+## 📌 Overview
 
-- **Image-based item extraction (이미지 품목 추출)** — Camera input or file upload; OpenAI Vision parses product name and price from any photo or receipt.
-- **Editable results (결과 수정)** — Edit extracted name, price, and quantity before adding to the list.
-- **Shopping list management (쇼핑 목록 관리)** — Checkbox-driven todo-style list; per-item and total price calculation; selective delete.
-- **Online price comparison (온라인 가격 비교)** — Select items and a platform (Coupang / Naver Shopping / Google); LangChain streams a personalized comparison guide with direct search links.
-- **Content moderation (입력 안전 검사)** — User-edited text is screened with OpenAI Moderation before being added to the list.
-- **STT / TTS support (음성 입력·출력)** — `gpt-4o-mini-transcribe` for speech-to-text, `gpt-4o-mini-tts` for text-to-speech.
-- **Note service (메모 서비스)** — Study notes are structured, saved as JSON, and can be loaded in recency order.
+AI Shopping Assistant is a Streamlit web application that lets users photograph any product or receipt. OpenAI's GPT-4V (Vision) model analyzes the image, extracts product details, and LangChain streams a real-time comparison guide with direct purchase links for platforms such as Coupang, Naver Shopping, and Google.
 
 ---
 
-## 📁 Project Structure (프로젝트 구조)
+## ✨ Features
+
+| # | Feature | Description |
+|---|---------|-------------|
+| 1 | **Image-Based Item Extraction** | Camera input or file upload; GPT-4V parses product name and price from any photo or receipt |
+| 2 | **Editable Results** | Review and edit extracted name, price, and quantity before adding to the list |
+| 3 | **Shopping List Management** | Checkbox-driven todo-style list with per-item and total price calculation plus selective delete |
+| 4 | **Online Price Comparison** | Select items and a platform; LangChain streams a personalized comparison guide with direct search links |
+| 5 | **Content Moderation** | User-edited text is screened with OpenAI Moderation before being added to the list |
+| 6 | **STT / TTS Support** | Speech-to-text via `gpt-4o-mini-transcribe`; text-to-speech via `gpt-4o-mini-tts` |
+| 7 | **Note Service** | Study notes are structured, saved as JSON, and loaded in recency order |
+
+---
+
+## 🛠 Tech Stack
+
+| Category | Technology | Purpose |
+|----------|-----------|---------|
+| UI | Streamlit | Web interface and real-time streaming display |
+| Image Analysis | OpenAI Vision (GPT-4V / `gpt-4.1-mini`) | Multimodal product and receipt recognition |
+| LLM Orchestration | LangChain (`ChatOpenAI`) | Prompt chaining and streaming response pipeline |
+| Content Safety | OpenAI Moderation (`omni-moderation-latest`) | Input safety screening |
+| Speech Input | `gpt-4o-mini-transcribe` | Speech-to-text |
+| Speech Output | `gpt-4o-mini-tts` | Text-to-speech |
+| Storage | Local JSON files | Note and audio output persistence |
+| Config | python-dotenv | Environment variable management |
+
+---
+
+## 📁 Project Structure
 
 ```
 Shopping_app/
-├── shopping_app.py     # Main Streamlit UI (메인 앱 화면)
-├── openai_service.py   # OpenAI & LangChain API calls (AI 호출 로직)
-├── storage_service.py  # JSON-based note persistence (노트 파일 저장/조회)
-├── note_service.py     # Note formatting helpers (노트 데이터 가공)
-├── config.py           # Env vars & directory setup (환경 설정)
-├── requirements.txt    # Python dependencies
-├── notes/              # Auto-created; stores note JSON files
-└── audio_outputs/      # Auto-created; stores TTS audio files
+├── shopping_app.py       # Main Streamlit UI
+├── openai_service.py     # OpenAI & LangChain API calls
+├── storage_service.py    # JSON-based note persistence
+├── note_service.py       # Note formatting helpers
+├── config.py             # Env vars & directory setup
+├── requirements.txt      # Python dependencies
+├── notes/                # Auto-created; stores note JSON files
+└── audio_outputs/        # Auto-created; stores TTS audio files
 ```
 
 ---
 
-## 🔄 Usage Flow (사용 흐름)
+## 🚀 Getting Started
 
-```
-[카메라/파일 업로드]
-        ↓
-[OpenAI Vision → 품목명·가격 추출]
-        ↓
-[사용자 확인·수정 → 목록에 추가]
-        ↓
-[쇼핑 목록에서 비교할 항목 체크]
-        ↓
-[플랫폼 선택: 쿠팡 / 네이버쇼핑 / 일반]
-        ↓
-[LangChain 스트리밍 → 비교 가이드 + 검색 링크 출력]
-```
+### Prerequisites
 
-1. Take a photo or upload an image.
-2. Click **AI 분석 시작** — Vision model extracts item name and price.
-3. Review and edit the result, then click **목록에 추가**.
-4. Check the items you want to compare in the shopping list.
-5. Choose a platform and click **가격 비교 시작** — a streaming AI response with direct links appears.
+- Python 3.10+
+- An [OpenAI API key](https://platform.openai.com/api-keys) with access to GPT-4V
 
----
-
-## 🏗️ Architecture (아키텍처)
-
-```
-shopping_app.py  (Streamlit UI layer)
-        │
-        ├── openai_service.py
-        │       ├── analyze_image()          # Vision → structured JSON
-        │       ├── is_flagged()             # Moderation check
-        │       ├── stream_shopping_feedback() # LangChain chain (stream)
-        │       └── calculate_selected_total()
-        │
-        ├── storage_service.py
-        │       ├── save_note()              # Write JSON to /notes
-        │       └── load_recent_notes()      # Read latest N notes
-        │
-        ├── note_service.py
-        │       ├── note_to_markdown()       # Dict → Markdown string
-        │       └── build_note_filename()    # Safe filename from title
-        │
-        └── config.py
-                └── Loads .env → exposes API keys, model names, paths
-```
-
-LangChain chain (in `openai_service.py`):
-
-```
-ChatPromptTemplate → ChatOpenAI (streaming=True) → StrOutputParser
-```
-
----
-
-## ⚙️ Environment Setup (환경 설정)
-
-Create a `.env` file in the project root:
-
-```env
-# Required (필수)
-OPENAI_API_KEY=sk-...
-
-# Optional — defaults shown (선택, 기본값 표시)
-DEFAULT_MODEL=gpt-4.1-mini
-STT_MODEL=gpt-4o-mini-transcribe
-TTS_MODEL=gpt-4o-mini-tts
-TTS_VOICE=alloy
-MODERATION_MODEL=omni-moderation-latest
-```
-
-| Variable | Default | Description |
-|---|---|---|
-| `OPENAI_API_KEY` | — | OpenAI API key **(required)** |
-| `DEFAULT_MODEL` | `gpt-4.1-mini` | Vision + chat model |
-| `STT_MODEL` | `gpt-4o-mini-transcribe` | Speech-to-text model |
-| `TTS_MODEL` | `gpt-4o-mini-tts` | Text-to-speech model |
-| `TTS_VOICE` | `alloy` | TTS voice preset |
-| `MODERATION_MODEL` | `omni-moderation-latest` | Content moderation model |
-
-The directories `notes/` and `audio_outputs/` are created automatically on first run.
-
----
-
-## 🚀 How to Run (실행 방법)
+### Installation
 
 ```bash
 # 1. Clone the repository
@@ -147,19 +81,111 @@ cd Shopping_app
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Set up environment variables
+# 3. Configure environment variables
 cp .env.example .env   # then fill in OPENAI_API_KEY
 
 # 4. Run the app
 streamlit run shopping_app.py
 ```
 
-The app opens at `http://localhost:8501` by default.
+The app opens at `http://localhost:8501` by default. The `notes/` and `audio_outputs/` directories are created automatically on first run.
+
+### Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+# Required
+OPENAI_API_KEY=sk-...
+
+# Optional — defaults shown
+DEFAULT_MODEL=gpt-4.1-mini
+STT_MODEL=gpt-4o-mini-transcribe
+TTS_MODEL=gpt-4o-mini-tts
+TTS_VOICE=alloy
+MODERATION_MODEL=omni-moderation-latest
+```
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `OPENAI_API_KEY` | — | OpenAI API key **(required)** |
+| `DEFAULT_MODEL` | `gpt-4.1-mini` | Vision + chat model |
+| `STT_MODEL` | `gpt-4o-mini-transcribe` | Speech-to-text model |
+| `TTS_MODEL` | `gpt-4o-mini-tts` | Text-to-speech model |
+| `TTS_VOICE` | `alloy` | TTS voice preset |
+| `MODERATION_MODEL` | `omni-moderation-latest` | Content moderation model |
 
 ---
 
-## 📄 License & References (라이선스 & 참고 문서)
+## 🔄 Usage Flow
 
-- [OpenAI API Docs](https://platform.openai.com/docs)
-- [LangChain Docs](https://python.langchain.com/docs/)
-- [Streamlit Docs](https://docs.streamlit.io/)
+```mermaid
+flowchart TD
+    A([📷 Upload Image / Camera]) --> B[GPT-4V Analysis\nopenai_service.analyze_image]
+    B --> C{Review & Edit\nExtracted Item}
+    C --> D[Add to Shopping List]
+    D --> E{Select Items\n& Platform}
+    E --> F[LangChain Chain\nChatPromptTemplate → ChatOpenAI]
+    F --> G([🌊 Streaming Response\nComparison Guide + Purchase Links])
+```
+
+**Step-by-step:**
+
+1. Take a photo or upload a product image.
+2. Click **Analyze** — GPT-4V extracts item name and price.
+3. Review and edit the result, then add it to your shopping list.
+4. Check the items you want to compare and select a platform (Coupang / Naver Shopping / Google).
+5. Click **Start Comparison** — a streaming AI response with direct purchase links appears in real time.
+
+---
+
+## 🏗 Architecture
+
+```mermaid
+graph TD
+    UI[shopping_app.py\nStreamlit UI Layer]
+
+    UI --> OS[openai_service.py]
+    UI --> SS[storage_service.py]
+    UI --> NS[note_service.py]
+    UI --> CFG[config.py]
+
+    OS --> OA1[analyze_image\nVision → structured JSON]
+    OS --> OA2[is_flagged\nModeration check]
+    OS --> OA3[stream_shopping_feedback\nLangChain streaming chain]
+
+    SS --> SA1[save_note\nWrite JSON to /notes]
+    SS --> SA2[load_recent_notes\nRead latest N notes]
+
+    NS --> NA1[note_to_markdown]
+    NS --> NA2[build_note_filename]
+
+    CFG --> ENV[.env → API keys, model names, paths]
+
+    OA3 --> LC[LangChain Pipeline\nChatPromptTemplate\n→ ChatOpenAI streaming=True\n→ StrOutputParser]
+```
+
+---
+
+## 🎯 Skills Demonstrated
+
+| Skill Area | Implementation | Detail |
+|-----------|---------------|--------|
+| **Multimodal AI** | OpenAI GPT-4V (Vision) | Extracts structured product data from arbitrary photos and receipts |
+| **Real-Time Streaming** | LangChain + Streamlit `st.write_stream` | Streams LLM tokens to the UI as they are generated |
+| **LangChain Orchestration** | `ChatPromptTemplate → ChatOpenAI → StrOutputParser` | Declarative prompt pipeline with streaming output |
+| **Content Safety** | OpenAI Moderation API | Screens user input before processing |
+| **Voice I/O** | GPT-4o-mini Transcribe + TTS | Full speech-to-text and text-to-speech loop |
+| **State Management** | Streamlit `session_state` | Persistent shopping list and UI state across interactions |
+| **Modular Architecture** | Service-layer separation | UI, AI calls, storage, and config are fully decoupled |
+
+---
+
+## 📄 License
+
+This project is open source. See [LICENSE](LICENSE) for details.
+
+**References:**
+- [OpenAI API Documentation](https://platform.openai.com/docs)
+- [LangChain Documentation](https://python.langchain.com/docs/)
+- [Streamlit Documentation](https://docs.streamlit.io/)
