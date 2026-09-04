@@ -58,8 +58,8 @@ Shopping_app/
 ├── note_service.py       # 노트 포맷 변환 헬퍼
 ├── config.py             # 환경 변수 로드 및 디렉토리 초기화
 ├── requirements.txt      # Python 의존성 목록
-├── notes/                # 자동 생성 — 노트 JSON 파일 저장 폴더
-└── audio_outputs/        # 자동 생성 — TTS 오디오 파일 저장 폴더
+├── notes/                # 자동 생성 - 노트 JSON 파일 저장 폴더
+└── audio_outputs/        # 자동 생성 - TTS 오디오 파일 저장 폴더
 ```
 
 ---
@@ -108,7 +108,7 @@ MODERATION_MODEL=omni-moderation-latest
 
 | 변수명 | 기본값 | 설명 |
 |--------|--------|------|
-| `OPENAI_API_KEY` | — | OpenAI API 키 **(필수)** |
+| `OPENAI_API_KEY` | - | OpenAI API 키 **(필수)** |
 | `DEFAULT_MODEL` | `gpt-4.1-mini` | Vision + 채팅 모델 |
 | `STT_MODEL` | `gpt-4o-mini-transcribe` | 음성 인식(STT) 모델 |
 | `TTS_MODEL` | `gpt-4o-mini-tts` | 음성 합성(TTS) 모델 |
